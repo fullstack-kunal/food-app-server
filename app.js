@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 
 app.get("/meals", async (req, res) => {
   try {
-    const meals = await fs.readFile("./data/available-meals.json", "utf8");
+    const meals = await fs.readFile("../data/available-meals.json", "utf8");
     res.json(JSON.parse(meals));
   } catch (error) {
     res.status(500).json({ message: "Could not retrieve meals data." });
@@ -74,4 +74,5 @@ app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
 
+// Export the app for Vercel
 export default app;
