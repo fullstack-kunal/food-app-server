@@ -10,18 +10,14 @@ app.use(express.static("public"));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
 
 app.get("/meals", async (req, res) => {
-  try {
-    const meals = await fs.readFile("../data/available-meals.json", "utf8");
-    res.json(JSON.parse(meals));
-  } catch (error) {
-    res.status(500).json({ message: "Could not retrieve meals data." });
-  }
+  const meals = await fs.readFile("./data/available-meals.json", "utf8");
+  res.json(JSON.parse(meals));
 });
 
 app.post("/orders", async (req, res) => {
@@ -74,5 +70,6 @@ app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
 
-// Export the app for Vercel
-export default app;
+app.listen(3000, () => {
+  console.log(`Server is running at http://localhost:3000`);
+});
