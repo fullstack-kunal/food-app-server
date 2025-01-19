@@ -2,11 +2,15 @@ import fs from "node:fs/promises";
 
 import bodyParser from "body-parser";
 import express from "express";
+import { join } from "node:path";
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
+
+const mealsFilePath = join(process.cwd(), "data", "available-meals.json");
+const ordersFilePath = join(process.cwd(), "data", "orders.json");
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -16,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/meals", async (req, res) => {
-  const meals = await fs.readFile("./data/available-meals.json", "utf8");
+  const meals = await fs.readFile(mealsFilePath, "utf8");
   res.json(JSON.parse(meals));
 });
 
@@ -51,11 +55,11 @@ app.post("/orders", async (req, res) => {
       id: (Math.random() * 1000).toString(),
     };
 
-    const orders = await fs.readFile("./data/orders.json", "utf8");
+    const orders = await fs.readFile(ordersFilePath, "utf8");
     const allOrders = JSON.parse(orders);
     allOrders.push(newOrder);
 
-    await fs.writeFile("./data/orders.json", JSON.stringify(allOrders));
+    await fs.writeFile(ordersFilePath, JSON.stringify(allOrders));
     res.status(201).json({ message: "Order created!" });
   } catch (error) {
     res.status(500).json({ message: "Could not save the order." });
