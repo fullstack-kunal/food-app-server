@@ -7,7 +7,7 @@ import { join } from "node:path";
 const app = express();
 
 app.use(bodyParser.json());
-app.use(express.static("public"));
+app.use(express.static(join(process.cwd(), "public")));
 
 const mealsFilePath = join(process.cwd(), "data", "available-meals.json");
 const ordersFilePath = join(process.cwd(), "data", "orders.json");
